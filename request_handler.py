@@ -1,5 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals
+from animals import get_all_animals, get_single_animal
+from employees import get_all_employees, get_single_employee
+from locations import get_all_locations, get_single_location
 
 
 # Here's a class. It inherits from another class.
@@ -15,27 +17,32 @@ class HandleRequests(BaseHTTPRequestHandler):
     # Here's a method on the class that overrides the parent's method.
     # It handles any GET request.
     def do_GET(self):
-        # Set the response code to 'Ok'
         self._set_headers(200)
+        response = {}
 
         # Your new console.log() that outputs to the terminal
         print(self.path)
 
-        # It's an if..else statement
-        if self.path == "/animals":
-            response = get_all_animals()
-        elif self.path == "/locations":
-            response = [
-                { "id": 3, "name": "Zoo" },
-                { "id": 4, "name": "Kennel" }
-            ]
-        elif self.path == "/employees":
-            response = [
-                { "id": 5, "name": "Billy" },
-                { "id": 6, "name": "Taylor" }
-            ]
-        else:
-            response = []
+        # Parse the URL and capture the tuple that is returned
+        (resource, id) = self.parse_url(self.path)
+
+        print(id)
+
+        if resource == "animals":
+            if id is not None:
+                response = f"{get_single_animal(id)}"
+            else:
+                response = f"{get_all_animals()}"
+        elif resource == "employees":
+            if id is not None:
+                response = f"{get_single_employee(id)}"
+            else:
+                response = f"{get_all_employees()}"
+        elif resource == "locations":
+            if id is not None:
+                response = f"{get_single_location(id)}"
+            else:
+                response = f"{get_all_locations()}"
 
         # This weird code sends a response back to the client
         self.wfile.write(f"{response}".encode())
@@ -57,10 +64,28 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_PUT(self):
         self.do_POST()
 
+    def parse_url(self, path):
+        # Just like splitting a string in JavaScript. If the
+        # path is "/animals/1", the resulting list will
+        # have "" at index 0, "animals" at index 1, and "1"
+        # at index 2.
+        path_params = path.split("/")
+        resource = path_params[1]
+        id = None
+
+        # Try to get the item at index 2
+        try:
+            id = int(path_params[2])
+        except IndexError:
+            pass  # No route parameter exists: /animals
+        except ValueError:
+            pass  # Request had trailing slash: /animals/
+
+        return (resource, id)  # This is a tuple
 
 # This function is not inside the class. It is the starting
 # point of this application.
-def main():
+def main(): 
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
