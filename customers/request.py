@@ -1,14 +1,8 @@
+from models.customer import Customer
 customers = [
-    {
-    "id": 1,
-    "name": "bob",
-    "locationId": 1,
-    },
-    {
-    "id": 2,
-    "name": "cindy",
-    "locationId": 3,
-    }
+    Customer(1, 'Bobo', 1),
+    Customer(2, 'Frodo', 2),
+    Customer(3, 'Jen', 1),
 ]
 
 def get_all_customers():
@@ -25,14 +19,14 @@ def get_single_customer(id):
     for customer in customers:
         # Dictionaries in Python use [] notation to find a key
         # instead of the dot notation that JavaScript used.
-        if customer["id"] == id:
+        if customer.id == id:
             requested_customer = customer
 
     return requested_customer
 
 def create_customer(customer):
     # Get the id value of the last customer in the list
-    max_id = customers[-1]["id"]
+    max_id = customers[-1].id
 
     # Add 1 to whatever that number is
     new_id = max_id + 1
@@ -41,7 +35,8 @@ def create_customer(customer):
     customer["id"] = new_id
 
     # Add the customer dictionary to the list
-    customers.append(customer)
+    new_customer = Customer(customer["id"], customer["name"], customer["location_id"])
+    customers.append(new_customer)
 
     # Return the dictionary with `id` property added
     return customer
@@ -53,10 +48,10 @@ def delete_customer(id):
     # Iterate the customers list, but use enumerate() so that you
     # can access the index value of each item
     for index, customer in enumerate(customers):
-        if customer["id"] == id:
+        if customer.id == id:
             # Found the customer. store the current index
             customer_index = index
-    
+
     if customer_index >= 0:
         customers.pop(customer_index)
 
@@ -64,7 +59,7 @@ def update_customer(id, new_customer):
     # Iterate the customers list, but use enumerate so that
     # you can access teh index value of each item.
     for index, customer in enumerate(customers):
-        if customer["id"] == id:
+        if customer.id == id:
             # Found the customer. Update teh value.
-            customers[index] = new_customer
+            customers[index] = Customer(id, new_customer["name"], new_customer["location_id"])
             break
