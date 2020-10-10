@@ -1,25 +1,8 @@
+from models.employee import Employee
 employees = [
-    {
-        "id": 1,
-        "name": "Billy",
-        "manager": True,
-        "full-time": True,
-        "hourly-rate": 10,
-    },
-    {
-        "id": 2,
-        "name": "Taylor",
-        "manager": True,
-        "full-time": True,
-        "hourly-rate": 11,
-    },
-    {
-        "id": 3,
-        "name": "Shane",
-        "manager": True,
-        "full-time": False,
-        "hourly-rate": 10,
-    }
+    Employee(1, "Billy", True, True, 10),
+    Employee(2, "Taylor", True, False, 11),
+    Employee(3, "Shane", False, False, 7)
 ]
 
 
@@ -34,21 +17,20 @@ def get_single_employee(id):
     # Iterate the employees list above. Very similar to the
     # for..of loops you used in JavaScript.
     for employee in employees:
-        # Dictionaries in Python use [] notation to find a key
-        # instead of the dot notation that JavaScript used.
-        if employee["id"] == id:
+        if employee.id == id:
             requested_employee = employee
 
     return requested_employee
 
 def create_employee(employee):
-    max_id = employees[-1]["id"]
+    max_id = employees[-1].id
 
     new_id = max_id + 1
 
     employee["id"] = new_id
     
-    employees.append(employee)
+    new_employee = Employee(employee["id"], employee["name"], employee["manager"], employee["full_time"], employee["hourly_rate"])
+    employees.append(new_employee)
 
     return employee
 
@@ -59,7 +41,7 @@ def delete_employee(id):
     # Iterate over employees list, but use enumerate() so you can 
     # access the index value of each item
     for index, employee in enumerate(employees):
-        if employee["id"] == id:
+        if employee.id == id:
             # Found the employee. store the current index
             employee_index = index
 
@@ -70,7 +52,7 @@ def update_employee(id, new_employee):
     # Iterate the employees list, but use enumerate() so you
     # can access the index of each item.
     for index, employee in enumerate(employees):
-        if employee["id"] == id:
+        if employee.id == id:
             # Found the employee. Update the value
-            employees[index] = new_employee
+            employees[index] = Employee(id, new_employee["name"], new_employee["manager"], new_employee["full_time"], new_employee["hourly_rate"])
             break
