@@ -1,15 +1,9 @@
+from models.location import Location
+
 locations = [
-    {
-        "id": 1,
-        "name": "Nashville North",
-        "address": "8422 Johnson Pike"
-    },
-    {
-        "id": 2,
-        "name": "Nashville South",
-        "address": "209 Emory Drive"
-    }
-    ]
+    Location(1, "Nashville North", "8422 Johnson Pike"),
+    Location(2, "Nashville South", "209 Emory Drive")
+]
 
 
 def get_all_locations():
@@ -23,16 +17,14 @@ def get_single_location(id):
     # Iterate the locations list above. Very similar to the
     # for..of loops you used in JavaScript.
     for location in locations:
-        # Dictionaries in Python use [] notation to find a key
-        # instead of the dot notation that JavaScript used.
-        if location["id"] == id:
+        if location.id == id:
             requested_location = location
 
     return requested_location
 
 def create_location(location):
     # Get the id value of the last animal in the list
-    max_id = locations[-1]["id"]
+    max_id = locations[-1].id
 
     # Add 1 to whatever that number is
     new_id = max_id + 1
@@ -41,7 +33,8 @@ def create_location(location):
     location["id"] = new_id
     
     # Add the location dirctionary to the list
-    locations.append(location)
+    new_location = Location(location["id"], location["name"], location["address"])
+    locations.append(new_location)
 
     return location
 
@@ -49,7 +42,7 @@ def delete_location(id):
     location_index = -1
 
     for index, location in enumerate(locations):
-        if location["id"] == id:
+        if location.id == id:
             location_index = index
     
     if location_index >= 0:
@@ -57,6 +50,6 @@ def delete_location(id):
 
 def update_location(id, new_location):
     for index, location in enumerate(locations):
-        if location["id"] == id:
-            locations[index] = new_location
+        if location.id == id:
+            locations[index] = Location(id, new_location["name"], new_location["address"])
             break
