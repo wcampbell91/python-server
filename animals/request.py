@@ -51,6 +51,7 @@ def delete_animal(id):
         if animal.id == id:
             # Found the animal. Store the current index.
             animal_index = index
+
     if animal_index >= 0:
         ANIMALS.pop(animal_index)
 
