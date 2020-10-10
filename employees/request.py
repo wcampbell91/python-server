@@ -65,3 +65,12 @@ def delete_employee(id):
 
     if employee_index >= 0:
         employees.pop(employee_index)
+
+def update_employee(id, new_employee):
+    # Iterate the employees list, but use enumerate() so you
+    # can access the index of each item.
+    for index, employee in enumerate(employees):
+        if employee["id"] == id:
+            # Found the employee. Update the value
+            employees[index] = new_employee
+            break
