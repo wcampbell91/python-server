@@ -51,3 +51,17 @@ def create_employee(employee):
     employees.append(employee)
 
     return employee
+
+def delete_employee(id):
+    # Initial -1 value for employee index, in case one isn't found
+    employee_index = -1
+
+    # Iterate over employees list, but use enumerate() so you can 
+    # access the index value of each item
+    for index, employee in enumerate(employees):
+        if employee["id"] == id:
+            # Found the employee. store the current index
+            employee_index = index
+
+    if employee_index >= 0:
+        employees.pop(employee_index)

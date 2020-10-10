@@ -1,14 +1,14 @@
 locations = [
-        {
-            "id": 1,
-            "name": "Nashville North",
-            "address": "8422 Johnson Pike"
-        },
-        {
-            "id": 2,
-            "name": "Nashville South",
-            "address": "209 Emory Drive"
-        }
+    {
+        "id": 1,
+        "name": "Nashville North",
+        "address": "8422 Johnson Pike"
+    },
+    {
+        "id": 2,
+        "name": "Nashville South",
+        "address": "209 Emory Drive"
+    }
     ]
 
 
@@ -44,3 +44,13 @@ def create_location(location):
     locations.append(location)
 
     return location
+
+def delete_location(id):
+    location_index = -1
+
+    for index, location in enumerate(locations):
+        if location["id"] == id:
+            location_index = index
+    
+    if location_index >= 0:
+        locations.pop(location_index)
