@@ -1,17 +1,15 @@
 locations = [
-    {
-        "id": 1,
-        "city": "New York City",
-    },
-    {
-        "id": 2,
-        "city": "Los Angeles",
-    },
-    {
-        "id": 3,
-        "city": "Chicago",
-    }
-]
+        {
+            "id": 1,
+            "name": "Nashville North",
+            "address": "8422 Johnson Pike"
+        },
+        {
+            "id": 2,
+            "name": "Nashville South",
+            "address": "209 Emory Drive"
+        }
+    ]
 
 
 def get_all_locations():
@@ -31,3 +29,18 @@ def get_single_location(id):
             requested_location = location
 
     return requested_location
+
+def create_location(location):
+    # Get the id value of the last animal in the list
+    max_id = locations[-1]["id"]
+
+    # Add 1 to whatever that number is
+    new_id = max_id + 1
+
+    # Add an 'id' property to the animal dictionary
+    location["id"] = new_id
+    
+    # Add the location dirctionary to the list
+    locations.append(location)
+
+    return location
