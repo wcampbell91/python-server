@@ -1,5 +1,3 @@
-from customers.request import create_customer, get_all_customers, get_single_customer
-from employees.request import create_employee
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal
 from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee
@@ -153,3 +151,6 @@ def main():
     host = ''
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
+
+if __name__ == "__main__":
+    main()
