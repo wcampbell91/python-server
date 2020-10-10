@@ -2,14 +2,23 @@ employees = [
     {
         "id": 1,
         "name": "Billy",
+        "manager": True,
+        "full-time": True,
+        "hourly-rate": 10,
     },
     {
         "id": 2,
         "name": "Taylor",
+        "manager": True,
+        "full-time": True,
+        "hourly-rate": 11,
     },
     {
         "id": 3,
         "name": "Shane",
+        "manager": True,
+        "full-time": False,
+        "hourly-rate": 10,
     }
 ]
 
@@ -31,3 +40,14 @@ def get_single_employee(id):
             requested_employee = employee
 
     return requested_employee
+
+def create_employee(employee):
+    max_id = employees[-1]["id"]
+
+    new_id = max_id + 1
+
+    employee["id"] = new_id
+    
+    employees.append(employee)
+
+    return employee
