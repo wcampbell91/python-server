@@ -49,8 +49,8 @@ def get_single_employee(id):
 
         data = db_cursor.fetchone()
 
-        employee = Employee(data['name'], data['address'],
-                        data['location_id'], data['id'])
+        employee = Employee(data['id'], data['name'], data['address'],
+                        data['location_id'])
         
     return json.dumps(employee.__dict__)
 
@@ -87,3 +87,28 @@ def update_employee(id, new_employee):
             # Found the employee. Update the value
             employees[index] = Employee(id, new_employee["name"], new_employee["manager"], new_employee["full_time"], new_employee["hourly_rate"])
             break
+
+def get_employee_by_location(location_id):
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            e.id,
+            e.name,
+            e.address,
+            e.location_id
+        FROM employee e
+        WHERE location_id = ?
+        """, (location_id, ))
+
+        employees = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(row['id'], row['name'], row['address'],
+                                row['location_id'])
+            employees.append(employee.__dict__)
+        
+    return json.dumps(employees)
