@@ -1,3 +1,5 @@
+import sqlite3
+import json
 from models.location import Location
 
 locations = [
@@ -7,20 +9,49 @@ locations = [
 
 
 def get_all_locations():
-    return locations
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-# Function with a single parameter
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address
+        FROM location a
+        """)
+        
+        locations = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            location = Location(row['id'], row['name'], row['address'])
+            
+            locations.append(location.__dict__)
+
+    return json.dumps(locations)
+
+
 def get_single_location(id):
-    # Variable to hold the found location, if it exists
-    requested_location = None
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    # Iterate the locations list above. Very similar to the
-    # for..of loops you used in JavaScript.
-    for location in locations:
-        if location.id == id:
-            requested_location = location
+    db_cursor.execute("""
+    SELECT
+        a.id,
+        a.name,
+        a.address
+    FROM location a
+    WHERE a.id = ?
+    """, (id, ))
 
-    return requested_location
+    data = db_cursor.fetchone()
+
+    location = Location(data['name'], data['address'], data['id'])
+
+    return json.dumps(location.__dict__)
 
 def create_location(location):
     # Get the id value of the last animal in the list

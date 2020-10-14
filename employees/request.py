@@ -1,30 +1,61 @@
-from models.employee import Employee
-employees = [
-    Employee(1, "Billy", True, True, 10),
-    Employee(2, "Taylor", True, False, 11),
-    Employee(3, "Shane", False, False, 7)
-]
+import sqlite3
+import json
+from models import Employee
+
+employees = []
 
 
 def get_all_employees():
-    return employees
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-# Function with a single parameter
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.location_id
+        FROM employee a
+        """)
+
+        employees = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(row['id'], row['name'], row['address'],
+            row['location_id'])
+
+            employees.append(employee.__dict__)
+
+    return json.dumps(employees)
+
+
 def get_single_employee(id):
-    # Variable to hold the found employee, if it exists
-    requested_employee = None
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    # Iterate the employees list above. Very similar to the
-    # for..of loops you used in JavaScript.
-    for employee in employees:
-        if employee.id == id:
-            requested_employee = employee
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.location_id
+        FROM employee a
+        WHERE a.id = ?
+        """, (id, ))
 
-    return requested_employee
+        data = db_cursor.fetchone()
+
+        employee = Employee(data['name'], data['address'],
+                        data['location_id'], data['id'])
+        
+    return json.dumps(employee.__dict__)
 
 def create_employee(employee):
     max_id = employees[-1].id
-
     new_id = max_id + 1
 
     employee["id"] = new_id
