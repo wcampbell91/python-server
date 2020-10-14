@@ -49,8 +49,8 @@ def get_single_employee(id):
 
         data = db_cursor.fetchone()
 
-        employee = Employee(data['name'], data['address'],
-                        data['location_id'], data['id'])
+        employee = Employee(data['id'], data['name'], data['address'],
+                        data['location_id'])
         
     return json.dumps(employee.__dict__)
 
