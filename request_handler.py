@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal, get_animal_by_location, get_animals_by_status
+from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal, get_animal_by_location, get_animals_by_status, delete_animal
 from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee, get_employee_by_location
 from locations import get_all_locations, get_single_location, create_location, delete_location, update_location
 from customers import get_all_customers, get_single_customer, create_customer, delete_customer, update_customer, get_customers_by_email
@@ -30,7 +30,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # items in it, which means the request was from
         # '/animals' or '/animals/2'
         if len(parsed) == 2:
-            ( resource, id, location_id ) = parsed
+            ( resource, id ) = parsed
 
             if resource == "animals":
                 if id is not None:
@@ -42,6 +42,16 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_customer(id)}"
                 else:
                     response = f"{get_all_customers()}"
+            elif resource == "locations":
+                if id is not None:
+                    response = f"{get_single_location(id)}"
+                else:
+                    response = f"{get_all_locations()}"
+            elif resource == "employees":
+                if id is not None:
+                    response = f"{get_single_employee(id)}"
+                else:
+                    response = f"{get_all_employees()}"
             
                     
         # Response from parse_url() is a tuple with 3
