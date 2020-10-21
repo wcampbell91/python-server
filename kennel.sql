@@ -35,3 +35,5 @@ VALUES (
         ON l.id = a.location_id
     JOIN Customer c
         ON c.id = a.customer_id
+
+SELECT * FROM Animals ORDER BY id DESC 
