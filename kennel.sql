@@ -36,4 +36,5 @@ VALUES (
     JOIN Customer c
         ON c.id = a.customer_id
 
-SELECT * FROM Animals ORDER BY id DESC 
+
+SELECT * FROM Animal ORDER BY id DESC 
