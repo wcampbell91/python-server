@@ -13,11 +13,11 @@ ANIMALS = [
 
 
 def get_all_animals():
-    # Open a connection to the database
+    # Open a connection to the rowbase
     with sqlite3.connect("./kennel.db") as conn:
 
         # Just use these. It's a Black Box.
-        conn.data_factory = sqlite3.data
+        conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         # Write the SQL query to get the information you want
@@ -45,21 +45,21 @@ def get_all_animals():
         # Initialize an empty list to hold all animal representations
         animals = []
 
-        # Convert datas of data into a Python list
+        # Convert rows of row into a Python list
         dataset = db_cursor.fetchall()
 
-        # Iterate list of data returned from database
-        for data in dataset:
+        # Iterate list of row returned from rowbase
+        for row in dataset:
 
-            # Create an animal instance from the current data.
-            animal = Animal(data['id'], data['name'], data['breed'],
-                            data['status'], data['location_id'],
-                            data['customer_id'])
+            # Create an animal instance from the current row.
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['location_id'],
+                            row['customer_id'])
 
-            location = Location(data['location_id'],data['location_name'], data['location_address'])
+            location = Location(row['location_id'],row['location_name'], row['location_address'])
 
-            customer = Customer(data['customer_id'], data['customer_name'], data['customer_address'], data['customer_email'],
-                                data['customer_password'])
+            customer = Customer(row['customer_id'], row['customer_name'], row['customer_address'], row['customer_email'],
+                                row['customer_password'])
 
             animal.location = location.__dict__
 
@@ -100,7 +100,7 @@ def get_single_animal(id):
         WHERE a.id = ?
         """, (id, ))
 
-        # Convert datas of data into a Python list
+        # Convert rows of row into a Python list
         data = db_cursor.fetchone()
 
         animal = Animal(data['id'], data['name'], data['breed'],
@@ -131,10 +131,10 @@ def create_animal(new_animal):
                 new_animal['treatment'], new_animal['locationId'], 
                 new_animal['customerId'], ))
         
-        # The `lastdatadi` property on curosr will return 
+        # The `lastrowdi` property on curosr will return 
         # the primary key of the last thing that got added to
-        # the database.
-        id = db_cursor.lastdataid
+        # the rowbase.
+        id = db_cursor.lastrowid
 
         # Add the `id` property to the animal dictionary that
         # was sent by the client so that the client sees the 
@@ -142,20 +142,6 @@ def create_animal(new_animal):
         new_animal['id'] = id
 
     return json.dumps(new_animal)
-
-def delete_animal(id):
-    # Initial -1 value for animal index, in case one isn't found
-    animal_index = -1
-
-    # Iterate the ANIMALS list, but use enumerate() so that you 
-    # can access the index value at each item
-    for index, animal in enumerate(ANIMALS):
-        if animal.id == id:
-            # Found the animal. Store the current index.
-            animal_index = index
-
-    if animal_index >= 0:
-        ANIMALS.pop(animal_index)
 
 def update_animal(id, new_animal):
     with sqlite3.connect('./kennel.db') as conn:
@@ -173,11 +159,11 @@ def update_animal(id, new_animal):
         """, (new_animal['name'], new_animal['breed'], new_animal['status'],
                 new_animal['customer_id'], new_animal['location_id'], id))
         
-        # Were any datas affected?
+        # Were any rows affected?
         # Did the client send an 'id' that exists?
-        datas_affected = db_cursor.datacount
+        rows_affected = db_cursor.rowcount
 
-    if datas_affected == 0:
+    if rows_affected == 0:
         # Forces 404 response by main module
         return False
     else:
@@ -186,7 +172,7 @@ def update_animal(id, new_animal):
 
 def get_animal_by_location(location_id):
     with sqlite3.connect("./kennel.db") as conn:
-        conn.data_factory = sqlite3.data433
+        conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
@@ -204,16 +190,16 @@ def get_animal_by_location(location_id):
         animals = []
         dataset = db_cursor.fetchall()
 
-        for data in dataset:
-            animal = Animal(data['id'], data['id'], data['breed'], data['status'],
-                            data['location_id'], data['customer_id'])
+        for row in dataset:
+            animal = Animal(row['id'], row['id'], row['breed'], row['status'],
+                            row['location_id'], row['customer_id'])
             animals.append(animal.__dict__)
         
     return json.dumps(animals)
 
 def get_animals_by_status(status):
     with sqlite3.connect("./kennel.db") as conn:
-        conn.data_factory = sqlite3.data
+        conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
@@ -231,8 +217,8 @@ def get_animals_by_status(status):
         animals = []
         dataset = db_cursor.fetchall()
 
-        for data in dataset:
-            animal = Animal(data['id'], data['name'], data['breed'], data['status'], data['location_id'], data['customer_id'])
+        for row in dataset:
+            animal = Animal(row['id'], row['name'], row['breed'], row['status'], row['location_id'], row['customer_id'])
             animals.append(animal.__dict__)
 
     return json.dumps(animals)

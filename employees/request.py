@@ -50,16 +50,24 @@ def get_single_employee(id):
             a.id,
             a.name,
             a.address,
-            a.location_id
+            a.location_id,
+            l.name location_name,
+            l.address location_address
         FROM employee a
+        JOIN location l
+            ON l.id = a.location_id
         WHERE a.id = ?
         """, (id, ))
 
         data = db_cursor.fetchone()
 
         employee = Employee(data['id'], data['name'], data['address'],
-                        data['location_id'])
-        
+        data['location_id'])
+
+        location = Location(data['id'], data['location_name'], data['location_address'])
+
+        employee.location = location.__dict__
+
     return json.dumps(employee.__dict__)
 
 def create_employee(employee):
