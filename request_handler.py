@@ -182,6 +182,13 @@ class HandleRequests(BaseHTTPRequestHandler):
                 pass  # Request had trailing slash: /animals/
 
             return (resource, id)
+    
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods','GET, POST, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers','X-Requested-With, content-type')
+        self.end_headers()
 
 # This function is not inside the class. It is the starting
 # point of this application.
